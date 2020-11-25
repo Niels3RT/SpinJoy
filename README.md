@@ -40,7 +40,7 @@ Firmware has several definitions to tweak for best experience:
 ### Autofire
 Autofire for button 1 is enabled by pushing button 12 (as long as its down), if you plan to use it its a good idea to connect a switch there.
 
-To modify the fire rate press button 11 and use the spinner.
+To modify the fire rate hold down button 11 and use the spinner.
 
 ### Drill Template
 There is a simple drill template included for mounting the rotary encoder and the joystick. Please verify the dimensions of the printed PDF before drilling, its for A4 paper size and scaling may be involved in printing.
