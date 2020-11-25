@@ -258,11 +258,11 @@ void loop()
 #ifdef USE_AUTOFIRE
 // read autofire max from eeprom
 void ee_auto_max_read() {
-  uint16_t a = EEPROM.read(0x00);
-  uint16_t b = EEPROM.read(0x02) ^ 0xffff;
-  uint16_t c = EEPROM.read(0x04) ^ 0x4e4c;
+  uint16_t a = ee_word_read(0x00);
+  uint16_t b = ee_word_read(0x02) ^ 0xffff;
+  uint16_t c = ee_word_read(0x04) ^ 0x4e4c;
   // compare
-  if (a == b == c) {
+  if ((a == b) && (a == c)) {
     // read auto_max ok, use
     auto_max = a;
   } else {
@@ -274,8 +274,21 @@ void ee_auto_max_read() {
 
 // write autofire max to eeprom
 void ee_auto_max_update() {
-  EEPROM.update(0x00, auto_max);
-  EEPROM.update(0x02, auto_max ^ 0xffff);
-  EEPROM.update(0x04, auto_max ^ 0x4e4c);
+  ee_word_update(0x00, auto_max);
+  ee_word_update(0x02, auto_max ^ 0xffff);
+  ee_word_update(0x04, auto_max ^ 0x4e4c);
+}
+
+// read 16bit word from eeprom
+uint16_t ee_word_read(int adr) {
+  uint16_t tword = 0;
+  tword = (uint16_t)EEPROM.read(adr++) << 8;
+  tword += EEPROM.read(adr);
+  return (tword);
+}
+// update 16bit word in eeprom
+void ee_word_update(int adr, uint16_t tword) {
+  EEPROM.update(adr++, (tword>>8)&0xff);
+  EEPROM.update(adr, tword&0xff);
 }
 #endif
