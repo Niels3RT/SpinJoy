@@ -63,6 +63,7 @@ const int8_t encpin[2] = {1, 0};        // rotary encoder
 //const char *gp_serial_spin = "MiSTer-S1 Spinner";
 const char *gp_serial = "SpinJoy V0.1";
 
+#include <EEPROM.h>
 #include "Joystick.h"
 #include "Mouse.h"
 
@@ -77,9 +78,10 @@ uint8_t cnt_btn[12]  = { DEBOUNCE_TOP, DEBOUNCE_TOP, DEBOUNCE_TOP, DEBOUNCE_TOP,
 uint16_t drvpos;
 
 #ifdef USE_AUTOFIRE
-  uint16_t auto_cnt;
-  uint16_t auto_max;
-  uint16_t auto_state;
+  uint16_t auto_cnt = 0;
+  uint16_t auto_max = 1000;
+  uint16_t auto_state = 0x001;
+  bool auto_modify = false;
 #endif
 
 #define SP_MAX ((SPINNER_PPR*4*270UL)/360)
@@ -145,10 +147,8 @@ void setup()
   attachInterrupt(digitalPinToInterrupt(encpin[1]), drv0_isr, CHANGE);
 
 #ifdef USE_AUTOFIRE
-  // autofire defaults
-  auto_cnt = 0;
-  auto_max = 1000;
-  auto_state = 0x001;
+  // read auto_max from eeprom
+  ee_auto_max_read();
 #endif
 }
 
@@ -216,9 +216,15 @@ void loop()
   }
   // modify autofire frequencey? must be active and button 10 be pressed
   if ((cnt_btn[10] < DEBOUNCE_TOP) && (cnt_btn[11] < DEBOUNCE_TOP)) {
+    auto_modify = true;
     auto_max += (val * 4);
     if (auto_max < 400) auto_max = 400;
     if (auto_max > 60000) auto_max = 60000;
+  } else {
+    if (auto_modify) {
+      auto_modify = false;
+      ee_auto_max_update();
+    }
   }
 #endif
 
@@ -249,3 +255,27 @@ void loop()
     SMouse.send();
   }
 }
+#ifdef USE_AUTOFIRE
+// read autofire max from eeprom
+void ee_auto_max_read() {
+  uint16_t a = EEPROM.read(0x00);
+  uint16_t b = EEPROM.read(0x02) ^ 0xffff;
+  uint16_t c = EEPROM.read(0x04) ^ 0x4e4c;
+  // compare
+  if (a == b == c) {
+    // read auto_max ok, use
+    auto_max = a;
+  } else {
+    // read auto_max nok, use default and update eeprom
+    auto_max = 1000;
+    ee_auto_max_update();
+  }
+}
+
+// write autofire max to eeprom
+void ee_auto_max_update() {
+  EEPROM.update(0x00, auto_max);
+  EEPROM.update(0x02, auto_max ^ 0xffff);
+  EEPROM.update(0x04, auto_max ^ 0x4e4c);
+}
+#endif
