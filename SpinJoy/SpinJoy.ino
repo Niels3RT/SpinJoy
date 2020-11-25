@@ -37,6 +37,9 @@
 // comment to disable autofire
 #define USE_AUTOFIRE
 
+// autofire tuning rate/spped, factor encoder rate to autofire rate
+#define AUTOFIRE_TUNE_FACTOR 4
+
 ///////////////// a shortcut ////////////////////////////////////
 
 #define cbi(sfr, bit)     (_SFR_BYTE(sfr) &= ~_BV(bit))
@@ -217,7 +220,7 @@ void loop()
   // modify autofire frequencey? must be active and button 10 be pressed
   if ((cnt_btn[10] < DEBOUNCE_TOP) && (cnt_btn[11] < DEBOUNCE_TOP)) {
     auto_modify = true;
-    auto_max += (val * 4);
+    auto_max += (val * AUTOFIRE_TUNE_FACTOR);
     if (auto_max < 400) auto_max = 400;
     if (auto_max > 60000) auto_max = 60000;
   } else {

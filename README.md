@@ -36,6 +36,7 @@ Firmware has several definitions to tweak for best experience:
 1. SPINNER_PPR: set the correct PPR value according to your spinner for correct work.
 2. DEBOUNCE_TOP: a counter is used to debounce buttons and stick movement. Set to 1 to completely disable debouncing. The switches in my (cheeaaap) joystick/button set need a value of 32 to stop bouncing, your mileage may vary. The menus in Mister scripts seem to be a good place to test this. This counter is only applied to switch release to minimize lag.
 3. USE_AUTOFIRE: comment to disable autofire function, buttons 11/12 are reported via USB in any case.
+4. AUTOFIRE_TUNE_FACTOR: bigger number -> faster autofire rate modification, lower number -> finer adjustment, default is 4
 
 ### Autofire
 Autofire for button 1 is enabled by pushing button 12 (as long as its down), if you plan to use it its a good idea to connect a switch there.
