@@ -34,7 +34,7 @@ The ribbon cable for the joystick fits nicely to pin headers soldered to the Ard
 Firmware has several definitions to tweak for best experience:
 
 1. SPINNER_PPR: set the correct PPR value according to your spinner for correct work.
-2. DEBOUNCE_TOP: a counter is used to debounce buttons and stick movement, this defines the counter top. Set to 1 to completely disable debouncing. The switches in my (cheeaaap) joystick/button set need a value of 32 to stop bouncing, your mileage may vary. The menus in Mister scripts seem to be a good place to test this. This counter is only applied to switch release to minimize lag.
+2. DEBOUNCE_TOP: a counter is used to debounce buttons and stick movement. Set to 1 to completely disable debouncing. The switches in my (cheeaaap) joystick/button set need a value of 32 to stop bouncing, your mileage may vary. The menus in Mister scripts seem to be a good place to test this. This counter is only applied to switch release to minimize lag.
 3. USE_AUTOFIRE: comment to disable autofire function, buttons 11/12 are reported via USB in any case.
 
 ### Autofire
